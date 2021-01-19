@@ -8,8 +8,6 @@ void framebuffer_size_callback(GLFWwindow* window, const int width, const int he
 void processInput(GLFWwindow* window);
 float colorValueManipulator(float const * const timeValue, float const * const offset);
 
-void createShaderProgram(unsigned int * const);
-
 int main()
 {
 	glfwInit();
@@ -38,7 +36,7 @@ int main()
 		return -1;
 	}
 
-	glViewport(0,0, 500, 800);
+	glViewport(0,0, 800, 500);
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	
@@ -92,8 +90,7 @@ int main()
 	glEnableVertexAttribArray(1);
 	//------------------- ----------------------------------- ---------------------
 	
-	unsigned int shaderProgram;
-	createShaderProgram(&shaderProgram);
+	Shader shader ("../res/shaders/vColorCycleShader.gl", "../res/shaders/fColorCycleShader.gl");
 
 	while(!glfwWindowShouldClose(window))
 	{
@@ -140,8 +137,8 @@ int main()
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glUseProgram(shaderProgram);
-		
+		shader.use();
+
 		glBindVertexArray(VAO[0]);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
 
@@ -165,93 +162,6 @@ int main()
 float colorValueManipulator(float const * const timeValue, float const * const offset)
 {
 	return (sin(*timeValue + *offset) + 1.0f) / 2.0f;
-}
-
-//creates a shaderProgram
-void createShaderProgram(unsigned int * const shaderProgram)
-{
-//creating our vertex shader
-	//the shader, very basic, not conduction any processing, just defining to take 3d vectors as input and casting the 4th value, used for perspective distortion, as 1 onto it.
-	const char *vertexShaderSource = "#version 330 core\n"
-    		"layout (location = 0) in vec3 aPos;\n"
-		"layout (location = 1) in vec3 aColor;\n"
-		"out vec3 color;"
-    		"void main()\n"
-    		"{\n"
-    		"	gl_Position = vec4(aPos, 1.0);\n"
-		"	color = aColor;\n"
-    		"}\0";
-
-	unsigned int vertexShader;
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
-	//attaching vertexShaderSource to our vertex shader object
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	//compiling our shader
-	glCompileShader(vertexShader);
-
-	//checking for compilation error.
-	int success;
-	char infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-	if(!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPLIATION_FAILED\n" << infoLog << std::endl;
-	}
-	
-	//creating our fragment shader, which assigns the pixlecolors to the pixles provided by the 'pixleShader'
-	
-	const char *fragmentShaderSource = "#version 330 core\n"
-		"out vec4 FragColor;\n"
-		"in vec3 color;\n"
-		"void main()\n"
-		"{\n"
-		"FragColor = vec4(color, 1.0);\n"
-		"}\0";
-	
-	unsigned int fragmentShader;
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-	//attaching fragmentShaderSource to our vertex shader object
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	//compiling our shader
-	glCompileShader(fragmentShader);
-
-	//checking for compilation error.
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-
-	if(!success)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPLIATION_FAILED\n" << infoLog << std::endl;
-	}
-	
-	//voila, we have created the two required shaders.
-	
-
-	//creating the shaderProgram
-	*shaderProgram = glCreateProgram();
-
-	//attaching our shaders to the program
-	glAttachShader(*shaderProgram, vertexShader);
-	glAttachShader(*shaderProgram, fragmentShader);
-
-	//linking? whatever that means...
-	glLinkProgram(*shaderProgram);
-
-	//error check for good measure:
-	glGetProgramiv(*shaderProgram, GL_LINK_STATUS, &success);
-	if(!success)
-	{
-		glGetProgramInfoLog(*shaderProgram,512,NULL,infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM_LINK::FAILED\n" << infoLog << std::endl;
-	}
-	
-	//we now dont need those programs anymore, so we delete them
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
 }
 
 //framebuffer_size_callback

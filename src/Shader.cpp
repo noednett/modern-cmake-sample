@@ -2,7 +2,7 @@
 
 	unsigned int ID;
 
-GLSL_Shader::GLSL_Shader(char const * vertexPath, char const * fragmentPath) 
+Shader::Shader(char const * vertexPath, char const * fragmentPath) 
 	{
 		
 		//READ SHADER FROM PATH
@@ -84,7 +84,7 @@ GLSL_Shader::GLSL_Shader(char const * vertexPath, char const * fragmentPath)
 		glDeleteShader(fragmentShaderID);
 	}
 
-bool GLSL_Shader::compileShader(unsigned int shader, char const * shaderName = "DEFAULT")
+bool Shader::compileShader(unsigned int shader, char const * shaderName = "DEFAULT")
 {
 	glCompileShader(shader);
 
@@ -102,22 +102,22 @@ bool GLSL_Shader::compileShader(unsigned int shader, char const * shaderName = "
 	return true;
 }
 
-void GLSL_Shader::use()
+void Shader::use()
 {
 	glUseProgram(ID);
 }
 
-void GLSL_Shader::setBool(std::string const &name, bool value) const
+void Shader::setBool(std::string const &name, bool value) const
 {
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), (int) value);
 }
 
-void GLSL_Shader::setInt(std::string const &name, int value) const
+void Shader::setInt(std::string const &name, int value) const
 {
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
 
-void GLSL_Shader::setFloat(std::string const &name, float value) const
+void Shader::setFloat(std::string const &name, float value) const
 {
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }

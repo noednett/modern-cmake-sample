@@ -8,13 +8,13 @@
 #include <sstream>
 #include <iostream>
 
-class GLSL_Shader
+class Shader
 {
 	public:
 		unsigned int ID;
 
 		//constructor
-		GLSL_Shader(char const * vertexPath, char const * fragmentPath);
+		Shader(char const * vertexPath, char const * fragmentPath);
 
 		//bind shaderprogram
 		void use();
