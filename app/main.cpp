@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cmath>
 #include <opengl-utils/Shader.hpp>
+#include <glm/vec3.hpp>
 
 void framebuffer_size_callback(GLFWwindow* window, const int width, const int height);
 void processInput(GLFWwindow* window);
@@ -90,7 +91,7 @@ int main()
 	glEnableVertexAttribArray(1);
 	//------------------- ----------------------------------- ---------------------
 	
-	Shader shader ("../res/shaders/vColorCycleShader.gl", "../res/shaders/fColorCycleShader.gl");
+	Shader shader ("../res/shaders/vColorCycleShader.vs", "../res/shaders/fColorCycleShader.fs");
 
 	while(!glfwWindowShouldClose(window))
 	{

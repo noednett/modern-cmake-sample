@@ -57,6 +57,9 @@ endif()
 #setting some apparently useful compiler flags
 set(CMAKE_CXX_FLAGS "-g -Wall")
 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
 #finding packages
 foreach(PACKAGE ${PACKAGES})
 	find_package(${PACKAGE})
