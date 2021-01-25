@@ -33,7 +33,10 @@ set(LOCAL_LIBS
 
 #insert requested external libraries
 set(EXT_LIBS
-	glfw
+	glfw3
+	X11
+	pthread
+	z
 )
 
 ###############################################
@@ -76,7 +79,8 @@ add_library(${CORE_LIB} OBJECT ${SOURCES})
 #adding required headers
 target_include_directories(${CORE_LIB} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
-#target_link_libraries(${CORE_LIB} PUBLIC ${LOCAL_LIBS} ${EXT_LIBS})
+#adding linked libraries to CORE_LIB
+target_link_libraries(${CORE_LIB} PUBLIC ${LOCAL_LIBS} ${EXT_LIBS})
 
 #add main app
 add_executable(app app/main.cpp)
